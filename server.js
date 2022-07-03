@@ -5,7 +5,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')
 (server, {
   cors: {
-    origin: "https://metaverserpg.netlify.app/",
+    origin: "https://metaverserpg.netlify.app",
     methods: ["GET", "POST"]
   }
 });
