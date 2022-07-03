@@ -5,7 +5,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')
 (server, {
   cors: {
-    origin: "http://localhost:3001",
+    origin: "https://metaverserpg.netlify.app/",
     methods: ["GET", "POST"]
   }
 });
@@ -51,7 +51,7 @@ io.on('connection',function(socket){
       io.emit('playerDisconnect', socket.id);
     });
 
-    socket.on('playerMove', (direction) => {
+    socket.on('playerMove', (data) => {
       io.emit('playerMove', {
         playerid: socket.id,
         position: {
