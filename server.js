@@ -60,6 +60,7 @@ io.on('connection',function(socket){
           x: players[socket.id].x,
           y: players[socket.id].y
         },
+        offsets:data.offsets,
         direction: data.direction
       })
     })
