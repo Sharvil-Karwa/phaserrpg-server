@@ -52,7 +52,9 @@ io.on('connection',function(socket){
     });
 
     socket.on('playerMove', (data) => {
-      io.emit('playerMove', {
+      players[socket.id].x = data.position.x
+      players[socket.id].y = data.position.y
+      socket.broadcast.emit('playerMove', {
         playerid: socket.id,
         position: {
           x: players[socket.id].x,
