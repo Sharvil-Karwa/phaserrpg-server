@@ -59,24 +59,25 @@ io.on('connection',function(socket){
         position: {
           x: players[socket.id].x,
           y: players[socket.id].y
-        }
+        },
+        direction: data.direction
       })
     })
 
-    socket.on('newpos', (newPosData) => {
-      console.log("newpos")
-      console.log(players)
-      if (newPosData.char !== 'player') {
-        players[newPosData.char.slice(6)].x = newPosData.x
-        players[newPosData.char.slice(6)].y = newPosData.y
-      } else {
-        players[socket.id].x = newPosData.x
-        players[socket.id].y = newPosData.y
-      }
-    })
+    // socket.on('newpos', (newPosData) => {
+    //   console.log("newpos")
+    //   console.log(players)
+    //   if (newPosData.char !== 'player') {
+    //     players[newPosData.char.slice(6)].x = newPosData.x
+    //     players[newPosData.char.slice(6)].y = newPosData.y
+    //   } else {
+    //     players[socket.id].x = newPosData.x
+    //     players[socket.id].y = newPosData.y
+    //   }
+    // })
 
     socket.on('getPlayers', () => {
       console.log("getplayers on")
-      socket.emit('positions', players)
+      io.emit('positions', players)
     })
 });
