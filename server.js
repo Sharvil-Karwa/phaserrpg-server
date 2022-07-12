@@ -27,18 +27,19 @@ app.get('/currentPlayers', (req, res) => {
 })
 
 io.on('connection',function(socket){
+    socket.on('newJoin',function({name}){
 
-    socket.on('newplayer',function(){
+        socket.emit('initialiseConnection', players);
 
         players[socket.id] = {
           x: Math.floor(Math.random() * 10 +3),
           y: Math.floor(Math.random() * 10+3),
-          id: socket.id,
-          avatar:Math.floor(Math.random() * 8)
+          playerId: socket.id,
+          avatar:Math.floor(Math.random() * 8),
+          playerName: name,
         };
 
-        socket.emit('currentPlayers', players);
-        socket.broadcast.emit('newPlayer', {data:players[socket.id], players:players});
+        io.emit('newPlayerConnected', players[socket.id]);
 
         console.log("new player connected")
 
@@ -48,34 +49,18 @@ io.on('connection',function(socket){
     socket.on('disconnect',function(){
       console.log("player discon")
       delete players[socket.id]
-      io.emit('playerDisconnect', socket.id);
+      io.emit('playerDisconnected', socket.id);
     });
 
     socket.on('playerMove', (data) => {
-      players[socket.id].x = data.position.x
-      players[socket.id].y = data.position.y
-      socket.broadcast.emit('playerMove', {
-        playerid: socket.id,
-        position: {
-          x: players[socket.id].x,
-          y: players[socket.id].y
-        },
-        offsets:data.offsets,
+      // players[socket.id].x = data.position.x
+      // players[socket.id].y = data.position.y
+      console.log(data)
+      io.emit('playerMove', {
+        players: players[socket.id],
         direction: data.direction
       })
     })
-
-    // socket.on('newpos', (newPosData) => {
-    //   console.log("newpos")
-    //   console.log(players)
-    //   if (newPosData.char !== 'player') {
-    //     players[newPosData.char.slice(6)].x = newPosData.x
-    //     players[newPosData.char.slice(6)].y = newPosData.y
-    //   } else {
-    //     players[socket.id].x = newPosData.x
-    //     players[socket.id].y = newPosData.y
-    //   }
-    // })
 
     socket.on('getPlayers', () => {
       console.log("getplayers on")
