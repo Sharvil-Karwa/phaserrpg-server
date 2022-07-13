@@ -72,4 +72,12 @@ io.on('connection',function(socket){
       console.log("getplayers on")
       io.emit('positions', players)
     })
+
+    socket.on('fixPosition', (position) => {
+      io.emit('playerMove', {
+        allPlayers: players,
+        player: players[socket.id],
+        position
+      })
+    })
 });
