@@ -74,6 +74,8 @@ io.on('connection',function(socket){
     })
 
     socket.on('fixPosition', (position) => {
+      players[socket.id].x = position.x
+      players[socket.id].y = position.y
       io.emit('playerMove', {
         allPlayers: players,
         player: players[socket.id],
