@@ -53,12 +53,17 @@ io.on('connection',function(socket){
     });
 
     socket.on('playerMove', (data) => {
-      // players[socket.id].x = data.position.x
-      // players[socket.id].y = data.position.y
+      players[socket.id].x += data.offset.x
+      players[socket.id].y += data.offset.y
       console.log(data)
       io.emit('playerMove', {
-        players: players[socket.id],
-        direction: data.direction
+        allPlayers: players,
+        player: players[socket.id],
+        direction: data.direction,
+        position: {
+          x: players[socket.id].x,
+          y: players[socket.id].y
+        }
       })
     })
 
