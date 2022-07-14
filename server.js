@@ -28,7 +28,7 @@ io.on('connection',function(socket){
 
     socket.on('room', function({roomName}) {
 
-      const roomPlayers = {}
+      var roomPlayers = {}
         Object.keys(players).forEach((id) => {
           if (players[id].room === roomName) {
             roomPlayers[id] = players[id]
@@ -49,55 +49,55 @@ io.on('connection',function(socket){
           playerName: name,
           room: roomName
         };
-        roomPlayers[socket.id] = {...players[socket.id]}
+        roomPlayers[socket.id] = players[socket.id]
 
         io.to(roomName).emit('newPlayerConnected', roomPlayers[socket.id]);
 
         console.log("new player connected")
 
         console.log(players)
-    });
+      });
 
-    socket.on('disconnect',function(){
-      console.log("player discon")
-      delete players[socket.id]
-      delete roomPlayers[socket.id]
-      io.to(roomName).emit('playerDisconnected', socket.id);
-    });
+      socket.on('disconnect',function(){
+        console.log("player discon")
+        delete players[socket.id]
+        delete roomPlayers[socket.id]
+        io.to(roomName).emit('playerDisconnected', socket.id);
+      });
 
-    socket.on('playerMove', (data) => {
-      players[socket.id].x = data.position.x + data.offset.x
-      players[socket.id].y = data.position.y + data.offset.y
-      roomPlayers[socket.id].x = data.position.x + data.offset.x
-      roomPlayers[socket.id].y = data.position.y + data.offset.y
-      console.log(data)
-      io.to(roomName).emit('playerMove', {
-        allPlayers: roomPlayers,
-        player: players[socket.id],
-        direction: data.direction,
-        position: {
-          x: players[socket.id].x,
-          y: players[socket.id].y
-        }
+      socket.on('playerMove', (data) => {
+        players[socket.id].x = data.position.x + data.offset.x
+        players[socket.id].y = data.position.y + data.offset.y
+        roomPlayers[socket.id].x = data.position.x + data.offset.x
+        roomPlayers[socket.id].y = data.position.y + data.offset.y
+        console.log(data)
+        io.to(roomName).emit('playerMove', {
+          allPlayers: roomPlayers,
+          player: players[socket.id],
+          direction: data.direction,
+          position: {
+            x: players[socket.id].x,
+            y: players[socket.id].y
+          }
+        })
+        console.log(players[socket.id])
       })
-      console.log(players[socket.id])
-    })
 
-    socket.on('getPlayers', () => {
-      console.log("getplayers on")
-      socket.emit('positions', roomPlayers)
-    })
-
-    socket.on('fixPosition', (position) => {
-      players[socket.id].x = position.x
-      players[socket.id].y = position.y
-      roomPlayers[socket.id].x = position.x
-      roomPlayers[socket.id].y = position.y
-      io.to(roomName).emit('playerMove', {
-        allPlayers: roomPlayers,
-        player: players[socket.id],
-        position
+      socket.on('getPlayers', () => {
+        console.log("getplayers on")
+        socket.emit('positions', roomPlayers)
       })
-    })
+
+      socket.on('fixPosition', (position) => {
+        players[socket.id].x = position.x
+        players[socket.id].y = position.y
+        roomPlayers[socket.id].x = position.x
+        roomPlayers[socket.id].y = position.y
+        io.to(roomName).emit('playerMove', {
+          allPlayers: roomPlayers,
+          player: players[socket.id],
+          position
+        })
+      })
     })
 });
