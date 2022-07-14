@@ -85,7 +85,7 @@ io.on('connection',function(socket){
 
     socket.on('getPlayers', () => {
       console.log("getplayers on")
-      io.to(roomName).emit('positions', roomPlayers)
+      socket.emit('positions', roomPlayers)
     })
 
     socket.on('fixPosition', (position) => {
