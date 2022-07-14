@@ -49,7 +49,7 @@ io.on('connection',function(socket){
           playerName: name,
           room: roomName
         };
-        roomPlayers[socket.id] = players[socket.id]
+        roomPlayers[socket.id] = {...players[socket.id]}
 
         io.to(roomName).emit('newPlayerConnected', roomPlayers[socket.id]);
 
