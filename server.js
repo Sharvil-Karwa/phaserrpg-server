@@ -5,7 +5,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')
 (server, {
   cors: {
-    origin: ["http://localhost:3001", "https://metaverserpg.netlify.app"],
+    origin: ["http://localhost:3002", "https://metaverserpg.netlify.app"],
     methods: ["GET", "POST"]
   }
 });
@@ -28,11 +28,15 @@ io.on('connection',function(socket){
 
     socket.on('room', function({roomName}) {
 
+      if (!players[roomName]) {
+        players[roomName] = {}
+      }
+
       socket.join(roomName)
 
       socket.on('newJoin',function({name}){
 
-        socket.emit('initialiseConnection', roomPlayers);
+        socket.emit('initialiseConnection', players[roomName]);
 
         players[roomName][socket.id] = {
           x: Math.floor(Math.random() * 10 +3),
