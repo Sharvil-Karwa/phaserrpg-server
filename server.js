@@ -49,16 +49,9 @@ io.on('connection',function(socket){
           playerName: name,
           room: roomName
         };
-        roomPlayers[socket.id] = {
-          x: Math.floor(Math.random() * 10 +3),
-          y: Math.floor(Math.random() * 10+3),
-          playerId: socket.id,
-          avatar:Math.floor(Math.random() * 8),
-          playerName: name,
-          room: roomName
-        };
+        roomPlayers[socket.id] = players[socket.id]
 
-        io.to(roomName).emit('newPlayerConnected', players[socket.id]);
+        io.to(roomName).emit('newPlayerConnected', roomPlayers[socket.id]);
 
         console.log("new player connected")
 
